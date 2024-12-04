@@ -1,5 +1,3 @@
-module Main where
-
 import MyMaybe
 import MyEither
 import MyContainer
