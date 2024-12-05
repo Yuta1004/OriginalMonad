@@ -15,6 +15,7 @@ executable original-monad
         MyMaybe,
         MyEither,
         MyContainer,
+        MyState,
     build-depends:
         base ^>=4.17.2.1,
     hs-source-dirs:   app
