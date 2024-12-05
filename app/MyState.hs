@@ -24,10 +24,12 @@ instance Applicative (MyState s) where
             (a', s2) = g s1
         in (h a', s2)
 
-instance Monad (MyState a) where
+instance Monad (MyState s) where
     (MyState f) >>= g = MyState $ \s0 ->
-        let (a, s1) = f s0
-        in runState (g a) s1
+        let (a, s1) = f s0      -- 入力となる状態 s0 を使用して f を評価して (a, s1) を得る
+            (MyState g') = g a  -- a を使用して次に実行する関数を準備
+        in g' s1                -- s1 を使用して次に実行する関数を実行
+        -- in runState (g a) s1 -- このようにしても書ける．まず runState によって MyState s b から s -> (b, s) を得て，これに対して s1 を与えて実行している．
 
 myGet :: MyState s s
 myGet = MyState $ \s0 -> (s0, s0)
