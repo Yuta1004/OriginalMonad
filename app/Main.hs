@@ -10,3 +10,5 @@ main = do
     print runMyResult
     print runMyContainer
     print $ execMyState runMyState 0
+    print $ execMyState runMyState' 0
+    print $ execMyState runMyState'' 0

@@ -54,8 +54,36 @@ runMyState :: MyState Int String
 runMyState = do
     a <- myGet
     myPut $ a + 20
-    myModify $ \s0 -> s0 * 2
+    myModify (*2)
     a' <- myGet
     case a' of
         40 -> return "0"
         _ -> return "1"
+
+runMyState' :: MyState Int String
+runMyState' =
+    myGet >>= (\a ->
+        myPut (a + 20) >>
+            myModify (*2) >>
+                myGet >>= \a' -> (
+                    case a' of
+                        40 -> return "0"
+                        _ -> return "1"
+                )
+    )
+
+runMyState'' :: MyState Int String
+runMyState'' =
+    MyState (\s0 -> (s0, s0)) >>= \a -> (
+        MyState (const ((), a + 20)) >>= \_ -> (
+            MyState (\s0 -> (s0, s0)) >>= \t -> (
+                MyState (const ((), (*2) t)) >>= \_ -> (
+                    MyState (\s0 -> (s0, s0)) >>= \a' -> (
+                        case a' of
+                            40 -> return "0"
+                            _ -> return "1"
+                    )
+                )
+            )
+        )
+    )
